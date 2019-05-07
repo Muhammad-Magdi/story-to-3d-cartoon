@@ -1,0 +1,29 @@
+/**Subjects**/
+tom
+jerry
+ali
+mona
+ball
+car
+
+/**Actions**/
+play
+shoot
+run
+hug
+eat
+drink
+fall
+
+/**Preps**/
+play - in
+shoot - towards
+
+/**Places**/
+house
+playground
+school
+
+/**Adjectives**/
+good
+evil

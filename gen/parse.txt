@@ -1,0 +1,140 @@
+{
+  "sentences": [
+    {
+      "index": 0,
+      "parse": "(ROOT\n  (S\n    (NP (NNP Ahmed))\n    (VP (VBZ plays)\n      (NP (NN Football)))\n    (. .)))",
+      "basicDependencies": [
+        {
+          "dep": "ROOT",
+          "governor": 0,
+          "governorGloss": "ROOT",
+          "dependent": 2,
+          "dependentGloss": "plays"
+        },
+        {
+          "dep": "nsubj",
+          "governor": 2,
+          "governorGloss": "plays",
+          "dependent": 1,
+          "dependentGloss": "Ahmed"
+        },
+        {
+          "dep": "dobj",
+          "governor": 2,
+          "governorGloss": "plays",
+          "dependent": 3,
+          "dependentGloss": "Football"
+        },
+        {
+          "dep": "punct",
+          "governor": 2,
+          "governorGloss": "plays",
+          "dependent": 4,
+          "dependentGloss": "."
+        }
+      ],
+      "enhancedDependencies": [
+        {
+          "dep": "ROOT",
+          "governor": 0,
+          "governorGloss": "ROOT",
+          "dependent": 2,
+          "dependentGloss": "plays"
+        },
+        {
+          "dep": "nsubj",
+          "governor": 2,
+          "governorGloss": "plays",
+          "dependent": 1,
+          "dependentGloss": "Ahmed"
+        },
+        {
+          "dep": "dobj",
+          "governor": 2,
+          "governorGloss": "plays",
+          "dependent": 3,
+          "dependentGloss": "Football"
+        },
+        {
+          "dep": "punct",
+          "governor": 2,
+          "governorGloss": "plays",
+          "dependent": 4,
+          "dependentGloss": "."
+        }
+      ],
+      "enhancedPlusPlusDependencies": [
+        {
+          "dep": "ROOT",
+          "governor": 0,
+          "governorGloss": "ROOT",
+          "dependent": 2,
+          "dependentGloss": "plays"
+        },
+        {
+          "dep": "nsubj",
+          "governor": 2,
+          "governorGloss": "plays",
+          "dependent": 1,
+          "dependentGloss": "Ahmed"
+        },
+        {
+          "dep": "dobj",
+          "governor": 2,
+          "governorGloss": "plays",
+          "dependent": 3,
+          "dependentGloss": "Football"
+        },
+        {
+          "dep": "punct",
+          "governor": 2,
+          "governorGloss": "plays",
+          "dependent": 4,
+          "dependentGloss": "."
+        }
+      ],
+      "tokens": [
+        {
+          "index": 1,
+          "word": "Ahmed",
+          "originalText": "Ahmed",
+          "characterOffsetBegin": 0,
+          "characterOffsetEnd": 5,
+          "pos": "NNP",
+          "before": "",
+          "after": " "
+        },
+        {
+          "index": 2,
+          "word": "plays",
+          "originalText": "plays",
+          "characterOffsetBegin": 6,
+          "characterOffsetEnd": 11,
+          "pos": "VBZ",
+          "before": " ",
+          "after": " "
+        },
+        {
+          "index": 3,
+          "word": "Football",
+          "originalText": "Football",
+          "characterOffsetBegin": 12,
+          "characterOffsetEnd": 20,
+          "pos": "NN",
+          "before": " ",
+          "after": ""
+        },
+        {
+          "index": 4,
+          "word": ".",
+          "originalText": ".",
+          "characterOffsetBegin": 20,
+          "characterOffsetEnd": 21,
+          "pos": ".",
+          "before": "",
+          "after": ""
+        }
+      ]
+    }
+  ]
+}

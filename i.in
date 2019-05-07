@@ -1,0 +1,29 @@
+{'3': [
+        { 'type': 'LIST',
+          'startIndex': 1,
+          'sentNum': 1,
+          'position': [1, 2],
+          'id': 1,
+          'animacy': 'ANIMATE',
+          'gender': 'UNKNOWN',
+          'endIndex': 4,
+          'number': 'PLURAL',
+          'isRepresentativeMention': True,    //this is the Entity
+          'text': 'Ahmed and Ali',
+          'headIndex': 1
+        },
+        { 'type': 'PRONOMINAL',
+          'startIndex': 8,                    //the word position after tokenization
+          'sentNum': 1,
+          'position': [1, 4],
+          'id': 3,
+          'animacy': 'ANIMATE',
+          'gender': 'UNKNOWN',
+          'endIndex': 9,
+          'number': 'PLURAL',
+          'isRepresentativeMention': False,
+          'text': 'they',
+          'headIndex': 8
+        }
+      ]
+}
