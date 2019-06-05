@@ -1,14 +1,18 @@
 import os
 import json
+import requests
 
-def call_core(input, annotators, output_file):
-    output_file = "gen/%s"%(output_file)
-    line = """wget --post-data '%s' 'http://corenlp.run/?properties={"annotators": "%s", "outputFormat": "json"}' -O %s"""
-    os.system(line %(input,annotators,output_file))
+#properties = {"annotators": -list of comma separated annotators-, "outputFormat": "json"}
+
+def call_core(input, annotators):
+    properties = (
+        ('properties', '{"annotators":'"'%s'"',"outputFormat":"json"}'%(annotators)),
+    )
+    response = requests.post('http://corenlp.run', params=properties, data=input)
+    return json.loads(response.text)
 
 def tokenize(text):
-    call_core(text, "tokenize,ssplit", "tokens.txt")
-    jsonRet = json.loads(open('gen/tokens.txt', 'r').read())
+    jsonRet = call_core(text, "tokenize,ssplit")
     tokens = dict()
     for sentIdx in range(len(jsonRet['sentences'])):
         sentDict = dict()
@@ -21,11 +25,8 @@ def tokenize(text):
 
 
 def solve_coref(text):
-    call_core(text, "coref,ssplit", "coref.txt")
-    jsonRet = json.loads(open('gen/coref.txt', 'r').read())
-
+    jsonRet = call_core(text, "coref,ssplit")
     tokens = tokenize(text)
-
     for num in jsonRet['corefs'].keys():
         representative = "";
         nonRepresentatives = [];
