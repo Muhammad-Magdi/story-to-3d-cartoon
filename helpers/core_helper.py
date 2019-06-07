@@ -1,18 +1,33 @@
 import os
 import json
 import requests
+import sys
+import time
+
+TRIALS = 10
+SLEEPTIME = 1
 
 #properties = {"annotators": -list of comma separated annotators-, "outputFormat": "json"}
-
 def call_core(input, annotators):
     print("Connecting to CoreNLP Server...")
 
+    CORESERVER = 'http://corenlp.run'
     properties = (
         ('properties', '{"annotators":'"'%s'"',"outputFormat":"json"}'%(annotators)),
     )
-    response = requests.post('http://corenlp.run', params=properties, data=input)
-
-    print('CoreNLP Server Returned...')
+    trial = 0
+    while trial < TRIALS:
+        try:
+            response = requests.post(CORESERVER, params=properties, data=input)
+            break;
+        except:
+            trial += 1
+            print('Trial Number', trial, ' -> Connection Error: ', sys.exc_info()[0])
+            time.sleep(SLEEPTIME)
+    else:
+        raise Exception("Couldn't Connect to the CoreNLP Server.")
+    
+    print('CoreNLP Server Returned.')
     return json.loads(response.text)
 
 
