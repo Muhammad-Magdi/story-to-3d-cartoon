@@ -4,7 +4,7 @@ import json
 
 aux_list = list()
 word_info = dict()      #lemma, pos, begin, end
-action_list = list()    #supported actions
+action_synset_dict = dict()    #supported actions
 
 def initialize_lists():
     #Auxiliaries List
@@ -13,9 +13,10 @@ def initialize_lists():
     aux_list = json.loads(aux_file.read())
 
     #Supported Actions list
-    global action_list
+    global action_synset_dict
     action_file = open('data/actions.json')
-    action_list = json.loads(action_file.read())
+    for action in json.loads(action_file.read()):
+        action_synset_dict[action] = nltk.get_verb_synset(action)
 
 
 def remove_auxiliaries(verb_phrase):
@@ -34,6 +35,7 @@ def fix_verb(verb_phrase):
     verb_list = verb_phrase.split(' ')
     verb_list = lemmatize_verbs(verb_list)
     verb_list = remove_auxiliaries(verb_list)
+    verb_list = nltk.replace_actions(action_synset_dict, verb_list)
     return ' '.join(verb_list)
 
 def format_event(relations):
@@ -55,7 +57,7 @@ def format_event(relations):
 def nlp(raw_input):
     initialize_lists()
     global word_info
-    
+
     #Solving Coreferences
     without_coref = core.solve_coref(raw_input)
     #Tokenizing to get lemmas, POS
