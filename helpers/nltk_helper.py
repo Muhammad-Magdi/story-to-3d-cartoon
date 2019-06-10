@@ -5,19 +5,26 @@ from nltk import pos_tag
 
 #Removes stopwords specified in the stopwords.txt file
 def remove_stopwords(text):
+    print('Removing stopwords...')
     word_arr = word_tokenize(text)
     f = open('data/stopwords.txt')
     stopwords = f.read()
     word_arr = [word for word in word_arr if word not in stopwords]
+    print('Stopwords removed.')
     return word_arr
+
+# def handle_negation(text):
+#     f = open('data/stopwords_negation.txt')
+#     stopwords_negation = f.read()
+#     word_arr = [word if word not in stopwords_negation else 'not' for word in word_arr]
 
 #Removes the stop words
 def clean_data(text):
+    print('Cleaning text...')
     text = text.lower()
     word_arr = remove_stopwords(text)
-    f = open('data/stopwords_negation.txt')
-    stopwords_negation = f.read()
-    word_arr = [word if word not in stopwords_negation else 'not' for word in word_arr]
+    # handle_negation(word_arr)
+    print('Cleaning done.')
     return ' '.join(word_arr)
 
 #Tokenizes and returns the POS of a sentence
@@ -30,7 +37,6 @@ def sentence_to_tags(words):
 def similarity(list,word):
     best=-1
     ind=-1
-    print(word)
     word = wn.synsets(word, pos = wn.VERB)[0]
     for i in range(len(list)):
         if wn.wup_similarity(list[i], word) > best:
@@ -39,6 +45,7 @@ def similarity(list,word):
     return list[ind].name().split('.')[0]
 
 def replace_actions(raw_input):
+    print(raw_input)
     pos_string = sentence_to_tags(raw_input)
     our_actions = []
     file = open('data/actions.txt', 'rt')
