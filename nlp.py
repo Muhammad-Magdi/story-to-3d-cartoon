@@ -22,7 +22,7 @@ def initialize_lists():
 def remove_auxiliaries(verb_phrase):
     ret = list()
     for verb in verb_phrase:
-        if verb not in aux_list:
+        if word_info[verb]['lemma'] not in aux_list:
             ret.append(verb)
     return ret
 
@@ -33,9 +33,11 @@ def lemmatize_verbs(verb_list):
 
 def fix_verb(verb_phrase):
     verb_list = verb_phrase.split(' ')
-    verb_list = lemmatize_verbs(verb_list)
     verb_list = remove_auxiliaries(verb_list)
-    verb_list = nltk.replace_actions(action_synset_dict, verb_list)
+    for idx, verb in enumerate(verb_list):
+        if word_info[verb]['pos'][0] == 'V':
+            verb_list = lemmatize_verbs(verb_list)
+            verb_list[idx] = nltk.most_similar(action_synset_dict, verb)
     return ' '.join(verb_list)
 
 def format_event(relations):
