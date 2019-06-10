@@ -2,18 +2,63 @@ import helpers.nltk_helper as nltk
 import helpers.core_helper as core
 import json
 
-#This may be the main function that returns
-#the JSON -List of Events- to be used in Graphics Part.
-def nlp(raw_input):
-    raw_input = core.solve_coref(raw_input)
-    print(raw_input)
-    raw_input = nltk.clean_data(raw_input)
-    print(raw_input)
-    raw_input = nltk.replace_actions(raw_input)
-    print(raw_input)
-    events = []     #list of Events -dicts-
-    for event in raw_input.split(','):
-        events.append(nltk.event_divider(event))
-    return json.dumps(events)
+aux_list = list()
+word_info = dict()  #lemma, pos, begin, end
 
-print(nlp("Tom was running in the Street, the Car kicked him"))
+def initialize_lists():
+    #Auxiliaries List
+    global aux_list
+    aux_file = open('data/aux.txt', 'r')
+    aux_list = json.loads(aux_file.read())
+
+def remove_auxiliaries(verb_phrase):
+    ret = list()
+    for verb in verb_phrase:
+        if verb not in aux_list:
+            ret.append(verb)
+    return ret
+
+def lemmatize_verbs(verb_list):
+    for index in range(len(verb_list)):
+        verb_list[index] = word_info[verb_list[index]]['lemma']
+    return verb_list
+
+def fix_verb(verb_phrase):
+    verb_list = verb_phrase.split(' ')
+    verb_list = lemmatize_verbs(verb_list)
+    verb_list = remove_auxiliaries(verb_list)
+    return ' '.join(verb_list)
+
+def format_event(relations):
+    print('Dividing Events...')
+    ret_list = list()
+    for sent_id in relations:
+        for phrase_id in relations[sent_id]:
+            phrase = relations[sent_id][phrase_id]
+            event = dict()
+            event['action'] = fix_verb(phrase['relation'])
+            event['subject'] = phrase['subject']        #to be edited
+            event['object'] = phrase['object']          #to be edited
+            ret_list.append(event)
+    print('Dividing Events done.')
+    return ret_list
+
+#This may be the main function that returns
+#the JSON -List of Events- to be used in Graphics Part.phrase
+def nlp(raw_input):
+    initialize_lists()
+    global word_info
+    
+    #Solving Coreferences
+    without_coref = core.solve_coref(raw_input)
+    #Tokenizing to get lemmas, POS
+    word_info = core.get_info(without_coref)
+    #Extract Relations
+    relations = core.openie(without_coref)
+    #Put events in the format: {subject, action, object}
+    return json.dumps(format_event(relations))
+    #Replacing strange nouns/actions
+
+
+raw_input = input()
+print(nlp(raw_input))
