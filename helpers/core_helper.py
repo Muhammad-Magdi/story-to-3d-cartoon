@@ -43,7 +43,7 @@ def tokenize(text):
             sentDict[idx] = x['originalText']
             idx += 1
         tokens[sent_id] = sentDict
-    print('Tokenization Done.')
+    print('Tokenization done:', tokens)
     return tokens
 
 
@@ -67,8 +67,9 @@ def solve_coref(text):
     for sent_id in tokens:
         for idx in range(len(tokens[sent_id])):
             ret.append(tokens[sent_id][idx])
-    print("Solving Coreferences Done.")
-    return ' '.join(ret)
+    ret = ' '.join(ret)
+    print("Solving Coreferences done: ", ret)
+    return ret
 
 
 #The Dictionary structure is
@@ -85,7 +86,7 @@ def openie(text):
             ret[sent['index']][index] = phrase
             index += 1
     
-    print('Parsing Done.')
+    print('Parsing done:', ret)
     return ret
 
 def enhancedDependencies(text):
@@ -110,5 +111,5 @@ def get_info(text):
             ret_dict[token['originalText']]['begin'] = token['characterOffsetBegin']
             ret_dict[token['originalText']]['end'] = token['characterOffsetEnd']
             ret_dict[token['originalText']]['pos'] = token['pos']
-    print('Lemmatizing done.')
+    print('Lemmatizing done:', ret_dict)
     return ret_dict
