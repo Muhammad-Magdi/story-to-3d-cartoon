@@ -60,5 +60,6 @@ def nlp(raw_input):
     #Replacing strange nouns/actions
 
 
+
 raw_input = input()
 print(nlp(raw_input))
