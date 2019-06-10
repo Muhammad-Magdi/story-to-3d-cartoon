@@ -33,42 +33,66 @@ def sentence_to_tags(words):
     POS = pos_tag(words)
     return POS
 
-#Determines the word that's most similar to the given word
-def similarity(list,word):
-    best=-1
-    ind=-1
-    word = wn.synsets(word, pos = wn.VERB)[0]
-    for i in range(len(list)):
-        if wn.wup_similarity(list[i], word) > best:
-            best=word.wup_similarity(list[i])
-            ind=i
-    return list[ind].name().split('.')[0]
+def most_similar_wup(synsets_dict, verb):
+    best_similarity = -1
+    most_similar = str()
+    verb_synset = wn.synsets(verb, pos = wn.VERB)[0]
+
+    for verb, synset in synsets_dict.items():
+        if wn.wup_similarity(synset, verb_synset) > best_similarity:
+            best_similarity = wn.wup_similarity(synset, verb_synset)
+            most_similar = verb
+    
+    return most_similar
+
+def most_similar_lch(synsets_dict, verb):
+    best_similarity = -1
+    most_similar = str()
+    verb_synset = wn.synsets(verb, pos = wn.VERB)[0]
+
+    for verb, synset in synsets_dict.items():
+        if wn.lch_similarity(synset, verb_synset) > best_similarity:
+            best_similarity = wn.lch_similarity(synset, verb_synset)
+            most_similar = verb
+    
+    return most_similar
+
+def most_similar_path(synsets_dict, verb):
+    best_similarity = -1
+    most_similar = str()
+    verb_synset = wn.synsets(verb, pos = wn.VERB)[0]
+
+    for verb, synset in synsets_dict.items():
+        if wn.path_similarity(synset, verb_synset) > best_similarity:
+            best_similarity = wn.path_similarity(synset, verb_synset)
+            most_similar = verb
+    
+    return most_similar
+
+#A voting system that chooses the most similar synset to the given verb
+def most_similar(synsets_dict, verb):
+    freq = dict()
+
+    lch_candidate = most_similar_lch(synsets_dict, verb)
+    freq[lch_candidate] = 1
+    path_candidate = most_similar_path(synsets_dict, verb)
+    freq[path_candidate] = 1 if path_candidate not in freq.keys() else freq[path_candidate]+1
+    wup_candidate = most_similar_wup(synsets_dict, verb)
+    freq[wup_candidate] = 1 if wup_candidate not in freq.keys() else freq[wup_candidate]+1
+
+    winner = list(freq.keys())[0]
+    max_score = list(freq.values())[0]
+    for candidate, score in freq.items():
+        if score > max_score:
+            winner = candidate
+
+    print('The most similar to "%s" is "%s" with score = %d'%(verb, winner, max_score))
+    return winner
 
 def get_verb_synset(verb):
     return wn.synsets(verb, pos = wn.VERB)[0]
 
-def replace_actions(raw_input):
-    print(raw_input)
-    pos_string = sentence_to_tags(raw_input)
-    our_actions = []
-    file = open('data/actions.txt', 'rt')
-    for line in file:
-        line = line[0:-1]
-        our_actions.append(wn.synsets(line, pos = wn.VERB)[0])
-
-    idx = 0
-    for word_tag in pos_string:
-        if word_tag[1][0] == 'V':
-            raw_input = raw_input.replace(word_tag[0], similarity(our_actions, word_tag[0]))
-    return raw_input
-
-#Takes an event and returns a map of its content
-def event_divider(event):
-    event_words = remove_stopwords(event)
-    pos = sentence_to_tags(event)
-
-    ret = dict()
-    ret['subject'] = pos[0][0]
-    ret['action'] = pos[1][0]
-    if len(pos) >= 3 : ret['object'] = pos[2][0]
-    return ret
+def replace_actions(synsets_dict, verbs):
+    for idx, verb in enumerate(verbs):
+        verbs[idx] = most_similar(synsets_dict, verb)
+    return verbs
