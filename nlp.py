@@ -3,13 +3,20 @@ import helpers.core_helper as core
 import json
 
 aux_list = list()
-word_info = dict()  #lemma, pos, begin, end
+word_info = dict()      #lemma, pos, begin, end
+action_list = list()    #supported actions
 
 def initialize_lists():
     #Auxiliaries List
     global aux_list
-    aux_file = open('data/aux.txt', 'r')
+    aux_file = open('data/aux.json', 'r')
     aux_list = json.loads(aux_file.read())
+
+    #Supported Actions list
+    global action_list
+    action_file = open('data/actions.json')
+    action_list = json.loads(action_file.read())
+
 
 def remove_auxiliaries(verb_phrase):
     ret = list()
