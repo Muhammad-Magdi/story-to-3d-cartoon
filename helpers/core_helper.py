@@ -79,11 +79,13 @@ def openie(text):
     jsonRet = call_core(text, 'openie')['sentences']
     ret = dict()
 
+    keys = ['object', 'relation', 'subject']
+
     for sent in jsonRet:
         ret[sent['index']] = dict()
         index = 0
         for phrase in sorted(sent['openie'], key = lambda ph : ph['subjectSpan']):           #loop on the sorted list
-            ret[sent['index']][index] = phrase
+            ret[sent['index']][index] = {key: phrase[key] for key in keys}
             index += 1
     
     print('Parsing done:', ret)

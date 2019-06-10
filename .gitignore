@@ -51,3 +51,6 @@ docs/_build/
 
 # My output file
 o.txt
+
+# temp files
+*trying*
