@@ -44,6 +44,9 @@ def similarity(list,word):
             ind=i
     return list[ind].name().split('.')[0]
 
+def get_verb_synset(verb):
+    return wn.synsets(verb, pos = wn.VERB)[0]
+
 def replace_actions(raw_input):
     print(raw_input)
     pos_string = sentence_to_tags(raw_input)
