@@ -1,6 +1,0 @@
-walk
-play
-eat
-hit
-dance
-jump
