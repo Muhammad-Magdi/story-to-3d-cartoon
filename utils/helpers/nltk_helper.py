@@ -1,15 +1,20 @@
 from nltk.tokenize import word_tokenize
 from nltk.corpus import wordnet as wn
 from nltk import pos_tag
+import sys
+
+def log(message):
+    sys.stderr.write(message + '\n')
+    sys.stderr.flush()
 
 #Removes stopwords specified in the stopwords.txt file
 def remove_stopwords(text):
-    print('Removing stopwords...')
+    log('Removing stopwords...')
     word_arr = word_tokenize(text)
     f = open('data/stopwords.txt')
     stopwords = f.read()
     word_arr = [word for word in word_arr if word not in stopwords]
-    print('Stopwords removed.')
+    log('Stopwords removed.')
     return word_arr
 
 # def handle_negation(text):
@@ -19,11 +24,11 @@ def remove_stopwords(text):
 
 #Removes the stop words
 def clean_data(text):
-    print('Cleaning text...')
+    log('Cleaning text...')
     text = text.lower()
     word_arr = remove_stopwords(text)
     # handle_negation(word_arr)
-    print('Cleaning done.')
+    log('Cleaning done.')
     return ' '.join(word_arr)
 
 #Tokenizes and returns the POS of a sentence
@@ -85,7 +90,7 @@ def most_similar(synsets_dict, verb):
         if score > max_score:
             winner = candidate
 
-    print('The most similar to "%s" is "%s" with score = %d'%(verb, winner, max_score))
+    log('The most similar to "%s" is "%s" with score = %d'%(verb, winner, max_score))
     return winner
 
 def get_verb_synset(verb):
