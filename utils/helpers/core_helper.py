@@ -114,7 +114,7 @@ def enhanced_dependencies(text):
     log('Finding Dependencies done: ' + str(dep_dict))
     return dep_dict
 
-#Returns a dictionary[original_text] that contains:
+#Returns a dictionary[sentence_Index][original_text] that contains:
 #lemma => the lemma of the original word
 #begin => the beginning index in the original text
 #end => the ending index in the original text
@@ -124,11 +124,12 @@ def get_info(text):
     jsonRet = call_core(text, 'lemma')['sentences']
     ret_dict = dict()
     for sent in jsonRet:
+        ret_dict[sent['index']] = dict()
         for token in sent['tokens']:
-            ret_dict[token['originalText']] = dict()
-            ret_dict[token['originalText']]['lemma'] = token['lemma']
-            ret_dict[token['originalText']]['begin'] = token['characterOffsetBegin']
-            ret_dict[token['originalText']]['end'] = token['characterOffsetEnd']
-            ret_dict[token['originalText']]['pos'] = token['pos']
+            ret_dict[sent['index']][token['originalText']] = dict()
+            ret_dict[sent['index']][token['originalText']]['lemma'] = token['lemma']
+            ret_dict[sent['index']][token['originalText']]['begin'] = token['characterOffsetBegin']
+            ret_dict[sent['index']][token['originalText']]['end'] = token['characterOffsetEnd']
+            ret_dict[sent['index']][token['originalText']]['pos'] = token['pos']
     log('Lemmatizing done: '+ str(ret_dict))
     return ret_dict
