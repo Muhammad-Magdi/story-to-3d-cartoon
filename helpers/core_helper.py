@@ -96,12 +96,23 @@ def openie(text):
     sys.stderr.flush()
     return ret
 
-def enhancedDependencies(text):
+def enhanced_dependencies(text):
     log('Finding Dependencies...')
-    jsonRet = call_core(text, 'parse')
-    ret = dict()
-    log(jsonRet)
-    sys.stderr.flush()
+    jsonRet = call_core(text, 'parse')['sentences']
+    dep_dict = dict()
+    for sent in jsonRet:
+        dep_dict[sent['index']] = dict()
+        for dependency in sent['basicDependencies']:
+            if dependency['governorGloss'] == 'ROOT':
+                continue
+            if dependency['governorGloss'] not in dep_dict[sent['index']]:
+                dep_dict[sent['index']][dependency['governorGloss']] = list()
+            dep_dict[sent['index']][dependency['governorGloss']].append({
+                                                                        'dependancy': dependency['dep'],
+                                                                        'dependent': dependency['dependentGloss']
+                                                                        })
+    log('Finding Dependencies done: ' + str(dep_dict))
+    return dep_dict
 
 #Returns a dictionary[original_text] that contains:
 #lemma => the lemma of the original word
