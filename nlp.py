@@ -1,6 +1,7 @@
 import helpers.nltk_helper as nltk
 import helpers.core_helper as core
 import json
+import utils.utils as utils
 
 aux_list = list()
 word_info = dict()      #lemma, pos, begin, end
@@ -41,7 +42,7 @@ def fix_verb(verb_phrase):
     return ' '.join(verb_list)
 
 def format_event(relations):
-    print('Dividing Events...')
+    utils.log('Dividing Events...')
     ret_list = list()
     for sent_id in relations:
         for phrase_id in relations[sent_id]:
@@ -51,7 +52,7 @@ def format_event(relations):
             event['subject'] = phrase['subject']        #to be edited
             event['object'] = phrase['object']          #to be edited
             ret_list.append(event)
-    print('Dividing Events done.')
+    utils.log('Dividing Events done.')
     return ret_list
 
 #This may be the main function that returns
@@ -59,13 +60,15 @@ def format_event(relations):
 def nlp(raw_input):
     initialize_lists()
     global word_info
-
     #Solving Coreferences
     without_coref = core.solve_coref(raw_input)
     #Tokenizing to get lemmas, POS
     word_info = core.get_info(without_coref)
+    print(word_info)
     #Extract Relations
     relations = core.openie(without_coref)
+    #Get Dependencies
+    dependencies = core.enhanced_dependencies(without_coref)
     #Put events in the format: {subject, action, object}
     return json.dumps(format_event(relations))
     #Replacing strange nouns/actions
@@ -73,4 +76,5 @@ def nlp(raw_input):
 
 
 raw_input = input()
+
 print(nlp(raw_input))

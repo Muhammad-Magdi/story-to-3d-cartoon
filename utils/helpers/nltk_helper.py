@@ -2,7 +2,6 @@ from nltk.tokenize import word_tokenize
 from nltk.corpus import wordnet as wn
 from nltk import pos_tag
 
-
 #Removes stopwords specified in the stopwords.txt file
 def remove_stopwords(text):
     print('Removing stopwords...')
