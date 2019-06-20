@@ -14,9 +14,9 @@ aux_tags = ['aux', 'auxpass']
 def initialize_lists():
     #Auxiliaries List
     global aux_list
-    aux_file = open('data/aux.json', 'r')
-    aux_list = json.loads(aux_file.read())
-
+    # aux_file = open('data/aux.json', 'r')
+    # aux_list = json.loads(aux_file.read())
+    aux_list = ["do", "have", "be", "may", "must", "shall", "will", "can"]
     #Supported Actions list
     global action_synset_dict
     action_file = open('data/actions.json')
@@ -63,7 +63,7 @@ def dependency_solver(dependencies):
                 event['action'] = fix_verb(sent, governor)
                 for dep in dependencies[sent][governor]:
                     if dep['dependancy'] in subject_tags:
-                        event['subject'] = dep['dependent']
+                        event['subject'] =  dep['dependent'].capitalize()
                     if dep['dependancy'] in object_tags:
                         event['object'] = dep['dependent']
                 if 'subject' in event:
@@ -89,6 +89,6 @@ def nlp(raw_input):
     #Replacing strange nouns/actions
 
 
-raw_input = input()
+# raw_input = input()
 
-print(nlp(raw_input))
+# print(nlp(raw_input))
