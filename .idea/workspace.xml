@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c6d14497-1f5d-406e-b7fc-8c15d96653fc" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/data/actions.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/actions.json" afterDir="false" />
-    </list>
+    <list default="true" id="c6d14497-1f5d-406e-b7fc-8c15d96653fc" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -15,8 +13,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/nlp.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="299">
-              <caret line="24" lean-forward="true" selection-start-line="24" selection-end-line="24" />
+            <state relative-caret-position="199">
+              <caret line="86" selection-start-line="86" selection-end-line="86" />
               <folding>
                 <element signature="e#0#40#0" expanded="true" />
               </folding>
@@ -72,6 +70,7 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/data/actions.json" />
+        <option value="$PROJECT_DIR$/nlp.py" />
       </list>
     </option>
   </component>
@@ -152,7 +151,7 @@
       <option name="presentableId" value="Default" />
       <updated>1561061323140</updated>
       <workItem from="1561061326219" duration="931000" />
-      <workItem from="1561288212793" duration="2343000" />
+      <workItem from="1561288212793" duration="2591000" />
     </task>
     <task id="LOCAL-00001" summary="server">
       <created>1561061648492</created>
@@ -165,7 +164,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="3274000" />
+    <option name="totallyTimeSpent" value="3522000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="51" y="-4" width="1315" height="772" extended-state="6" />
@@ -337,8 +336,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/nlp.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="299">
-          <caret line="24" lean-forward="true" selection-start-line="24" selection-end-line="24" />
+        <state relative-caret-position="199">
+          <caret line="86" selection-start-line="86" selection-end-line="86" />
           <folding>
             <element signature="e#0#40#0" expanded="true" />
           </folding>

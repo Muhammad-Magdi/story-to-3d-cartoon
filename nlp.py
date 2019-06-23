@@ -86,7 +86,7 @@ def nlp(raw_input):
     #Put events in the format: {subject, action, object}
     return json.dumps({"data":dependency_solver(dependencies)})
     # return json.dumps(format_event(relations))
-    
+
     #Replacing strange nouns/actions
 
 
