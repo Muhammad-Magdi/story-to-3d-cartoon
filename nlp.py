@@ -48,8 +48,8 @@ def format_event(relations):
             phrase = relations[sent_id][phrase_id]
             event = dict()
             event['action'] = fix_verb(phrase['relation'])
-            event['subject'] = phrase['subject']        #to be edited
-            event['object'] = phrase['object']          #to be edited
+            event['actor'] = phrase['actor']        #to be edited
+            event['obj'] = phrase['obj']          #to be edited
             ret_list.append(event)
     utils.log('Dividing Events done.')
     return ret_list
@@ -63,10 +63,10 @@ def dependency_solver(dependencies):
                 event['action'] = fix_verb(sent, governor)
                 for dep in dependencies[sent][governor]:
                     if dep['dependancy'] in subject_tags:
-                        event['subject'] =  dep['dependent'].capitalize()
+                        event['actor'] =  dep['dependent'].capitalize()
                     if dep['dependancy'] in object_tags:
-                        event['object'] = dep['dependent']
-                if 'subject' in event:
+                        event['obj'] = dep['dependent']
+                if 'actor' in event:
                     events.append(event)
     return events
 
@@ -83,7 +83,7 @@ def nlp(raw_input):
     # relations = core.openie(without_coref)
     #Get Dependencies
     dependencies = core.enhanced_dependencies(without_coref)
-    #Put events in the format: {subject, action, object}
+    #Put events in the format: {actor, action, obj}
     return json.dumps({"data":dependency_solver(dependencies)})
     # return json.dumps(format_event(relations))
 
