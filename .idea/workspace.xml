@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c6d14497-1f5d-406e-b7fc-8c15d96653fc" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/data/actions.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/actions.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -12,11 +12,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/nlp.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="215">
-              <caret line="88" selection-start-line="88" selection-end-line="88" />
+            <state relative-caret-position="330">
+              <caret line="79" column="22" selection-start-line="79" selection-start-column="19" selection-end-line="79" selection-end-column="22" />
               <folding>
                 <element signature="e#0#40#0" expanded="true" />
               </folding>
@@ -48,7 +48,7 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/data/actions.json">
           <provider selected="true" editor-type-id="text-editor" />
         </entry>
@@ -58,7 +58,13 @@
   <component name="FindInProjectRecents">
     <findStrings>
       <find>walk</find>
+      <find>subject</find>
+      <find>object</find>
     </findStrings>
+    <replaceStrings>
+      <replace>actor</replace>
+      <replace>obj</replace>
+    </replaceStrings>
   </component>
   <component name="Git.Settings">
     <option name="UPDATE_TYPE" value="MERGE" />
@@ -67,8 +73,8 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/nlp.py" />
         <option value="$PROJECT_DIR$/data/actions.json" />
+        <option value="$PROJECT_DIR$/nlp.py" />
       </list>
     </option>
   </component>
@@ -150,7 +156,7 @@
       <updated>1561061323140</updated>
       <workItem from="1561061326219" duration="931000" />
       <workItem from="1561288212793" duration="2713000" />
-      <workItem from="1561294424306" duration="243000" />
+      <workItem from="1561294424306" duration="2003000" />
     </task>
     <task id="LOCAL-00001" summary="server">
       <created>1561061648492</created>
@@ -177,7 +183,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="3887000" />
+    <option name="totallyTimeSpent" value="5647000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="51" y="-4" width="1315" height="772" extended-state="6" />
@@ -320,16 +326,6 @@
     <entry file="file://$PROJECT_DIR$/server.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/nlp.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="215">
-          <caret line="88" selection-start-line="88" selection-end-line="88" />
-          <folding>
-            <element signature="e#0#40#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/utils/helpers/core_helper.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1605">
@@ -352,6 +348,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/data/actions.json">
       <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nlp.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="79" column="22" selection-start-line="79" selection-start-column="19" selection-end-line="79" selection-end-column="22" />
+          <folding>
+            <element signature="e#0#40#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
     </entry>
   </component>
 </project>
