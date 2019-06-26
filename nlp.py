@@ -23,15 +23,6 @@ def initialize_lists():
     for action in json.loads(action_file.read()):
         action_synset_dict[action] = nltk.get_verb_synset(action)
 
-
-# def remove_auxiliaries(verb_phrase):
-#     ret = list()
-#     for verb in verb_phrase:
-#         for sent in word_info:
-#             if word_info[verb]['lemma'] not in aux_list:
-#                 ret.append(verb)
-#     return ret
-
 def get_text(sent, index):
     return word_info[sent][index]['text']
 
@@ -47,30 +38,23 @@ def get_text(sent, index):
 def is_verb(sent, index):
     return word_info[sent][index]['pos'][0] == 'V'
 
+def is_person(sent, index):
+    return 'person' in word_info[sent][index] or 'rep' in word_info[sent][index]
+
 def fix_noun(sent, noun_index):
-    return get_text(sent, noun_index) if 'rep' not in word_info[sent][noun_index] else get_rep(sent, noun_index)
+    noun = get_text(sent, noun_index) if 'rep' not in word_info[sent][noun_index] else get_rep(sent, noun_index)
+    while 'a ' in noun: noun = noun.replace('a ', '')
+    while 'the ' in noun: noun = noun.replace('the ', '')
+    while 'an ' in noun: noun = noun.replace('the ', '')
+    return noun
 
 def fix_verb(sent, verb_index):
     verb = get_lemma(sent, verb_index)
     verb = nltk.most_similar(action_synset_dict, verb)
     return verb
 
-# def format_event(relations):
-#     utils.log('Dividing Events...')
-#     ret_list = list()
-#     for sent_id in relations:
-#         for phrase_id in relations[sent_id]:
-#             phrase = relations[sent_id][phrase_id]
-#             event = dict()
-#             event['action'] = fix_verb(phrase['relation'])
-#             event['actor'] = phrase['actor']        #to be edited
-#             event['obj'] = phrase['obj']          #to be edited
-#             ret_list.append(event)
-#     utils.log('Dividing Events done.')
-#     return ret_list
-
 def dependency_solver(dependencies):
-    events = list()
+    ret_dict = {'objects':[], 'data': []}
     for sent in dependencies:
         for governor_index in sorted(dependencies[sent]):
             if is_verb(sent, governor_index):
@@ -85,9 +69,11 @@ def dependency_solver(dependencies):
                             event['obj'] = fix_noun(sent, dep['dependent'])
                         else:
                             event['obj2'] = fix_noun(sent, dep['dependent'])
+                        if not is_person(sent, dep['dependent']) and not get_text(sent, dep['dependent']) in ret_dict['objects']:
+                            ret_dict['objects'].append(get_text(sent, dep['dependent']))
                 if 'actor' in event:
-                    events.append(event)
-    return events
+                    ret_dict['data'].append(event)
+    return ret_dict
 
 #This may be the main function that returns
 #the JSON -List of Events- to be used in Graphics Part.phrase
@@ -103,11 +89,12 @@ def nlp(raw_input):
     #Get Dependencies
     dependencies = core.enhanced_dependencies(raw_input)
     #Put events in the format: {actor, action, obj}
-    return json.dumps({"data":dependency_solver(dependencies)})
+    ret = dependency_solver(dependencies)
+    return json.dumps(ret)
     # return json.dumps(format_event(relations))
     #Replacing strange nouns/actions
 
 
-# raw_input = input()
+raw_input = input()
 
-# print(nlp(raw_input))
+print(nlp(raw_input))
