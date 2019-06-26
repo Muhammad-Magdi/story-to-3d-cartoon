@@ -50,11 +50,12 @@ def tokenize(text):
     log('Tokenization done: '+ str(tokens))
     return tokens
 
-
+#returns a dict[word_idx] = representative
 def solve_coref(text):
     log("Solving Coreferences...")
-    jsonRet = call_core(text, "coref,ssplit")
+    jsonRet = call_core(text, "coref")
     tokens = tokenize(text)
+    ret = dict()
     for num in jsonRet['corefs'].keys():
         representative = ""
         nonRepresentatives = []
@@ -62,17 +63,10 @@ def solve_coref(text):
             if mention['isRepresentativeMention']:
                 representative = mention['text']
             else:
-                nonRepresentatives.append((mention['sentNum'], mention['startIndex']))
+                nonRepresentatives.append(mention['startIndex'])
 
         for nr in nonRepresentatives:
-            tokens[int(nr[0])-1][int(nr[1])-1] = representative
-
-    ret = []
-    for sent_id in tokens:
-        for idx in range(len(tokens[sent_id])):
-            ret.append(tokens[sent_id][idx])
-    ret = ' '.join(ret)
-    log("Solving Coreferences done: "+ str(ret))
+            ret[nr] = representative
     return ret
 
 
@@ -105,31 +99,37 @@ def enhanced_dependencies(text):
         for dependency in sent['basicDependencies']:
             if dependency['governorGloss'] == 'ROOT':
                 continue
-            if dependency['governorGloss'] not in dep_dict[sent['index']]:
-                dep_dict[sent['index']][dependency['governorGloss']] = list()
-            dep_dict[sent['index']][dependency['governorGloss']].append({
+            if dependency['governor'] not in dep_dict[sent['index']]:
+                dep_dict[sent['index']][dependency['governor']] = list()
+            dep_dict[sent['index']][dependency['governor']].append({
                                                                         'dependancy': dependency['dep'],
-                                                                        'dependent': dependency['dependentGloss']
+                                                                        'dependent': dependency['dependent']
                                                                         })
     log('Finding Dependencies done: ' + str(dep_dict))
     return dep_dict
 
-#Returns a dictionary[sentence_Index][original_text] that contains:
+#Returns a dictionary[sentence_index][token_index] that contains:
 #lemma => the lemma of the original word
 #begin => the beginning index in the original text
 #end => the ending index in the original text
 #pos => the part of speech
+#text => original text
+#rep ?=> the representative (if it has)
 def get_info(text):
     log('Getting Lemmas...')
     jsonRet = call_core(text, 'lemma')['sentences']
     ret_dict = dict()
+    corefs = solve_coref(text)
     for sent in jsonRet:
         ret_dict[sent['index']] = dict()
         for token in sent['tokens']:
-            ret_dict[sent['index']][token['originalText']] = dict()
-            ret_dict[sent['index']][token['originalText']]['lemma'] = token['lemma']
-            ret_dict[sent['index']][token['originalText']]['begin'] = token['characterOffsetBegin']
-            ret_dict[sent['index']][token['originalText']]['end'] = token['characterOffsetEnd']
-            ret_dict[sent['index']][token['originalText']]['pos'] = token['pos']
+            ret_dict[sent['index']][token['index']] = dict()
+            ret_dict[sent['index']][token['index']]['lemma'] = token['lemma']
+            ret_dict[sent['index']][token['index']]['begin'] = token['characterOffsetBegin']
+            ret_dict[sent['index']][token['index']]['end'] = token['characterOffsetEnd']
+            ret_dict[sent['index']][token['index']]['pos'] = token['pos']
+            ret_dict[sent['index']][token['index']]['text'] = token['originalText']
+            if token['index'] in corefs:
+                ret_dict[sent['index']][token['index']]['rep'] = corefs[token['index']]
     log('Lemmatizing done: '+ str(ret_dict))
     return ret_dict
