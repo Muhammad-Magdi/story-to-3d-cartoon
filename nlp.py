@@ -4,7 +4,7 @@ import json
 import utils.utils as utils
 
 aux_list = list()
-word_info = dict()      #lemma, pos, begin, end
+word_info = dict()      #lemma, pos, begin, end, text, rep
 action_synset_dict = dict()    #supported actions
 
 subject_tags = ['nsubj', 'csubj', 'nsubjpass']
@@ -24,48 +24,67 @@ def initialize_lists():
         action_synset_dict[action] = nltk.get_verb_synset(action)
 
 
-def remove_auxiliaries(verb_phrase):
-    ret = list()
-    for verb in verb_phrase:
-        for sent in word_info:
-            if word_info[verb]['lemma'] not in aux_list:
-                ret.append(verb)
-    return ret
+# def remove_auxiliaries(verb_phrase):
+#     ret = list()
+#     for verb in verb_phrase:
+#         for sent in word_info:
+#             if word_info[verb]['lemma'] not in aux_list:
+#                 ret.append(verb)
+#     return ret
 
-def lemmatize_verb(sent, verb):
-    return word_info[sent][verb]['lemma']
+def get_text(sent, index):
+    return word_info[sent][index]['text']
 
-def fix_verb(sent, verb):
-    verb = lemmatize_verb(sent, verb)
+def get_rep(sent, index):
+    return word_info[sent][index]['rep']
+
+def get_lemma(sent, index):
+    return word_info[sent][index]['lemma']
+
+def get_text(sent, index):
+    return word_info[sent][index]['text']
+
+def is_verb(sent, index):
+    return word_info[sent][index]['pos'][0] == 'V'
+
+def fix_noun(sent, noun_index):
+    return get_text(sent, noun_index) if 'rep' not in word_info[sent][noun_index] else get_rep(sent, noun_index)
+
+def fix_verb(sent, verb_index):
+    verb = get_lemma(sent, verb_index)
     verb = nltk.most_similar(action_synset_dict, verb)
     return verb
 
-def format_event(relations):
-    utils.log('Dividing Events...')
-    ret_list = list()
-    for sent_id in relations:
-        for phrase_id in relations[sent_id]:
-            phrase = relations[sent_id][phrase_id]
-            event = dict()
-            event['action'] = fix_verb(phrase['relation'])
-            event['actor'] = phrase['actor']        #to be edited
-            event['obj'] = phrase['obj']          #to be edited
-            ret_list.append(event)
-    utils.log('Dividing Events done.')
-    return ret_list
+# def format_event(relations):
+#     utils.log('Dividing Events...')
+#     ret_list = list()
+#     for sent_id in relations:
+#         for phrase_id in relations[sent_id]:
+#             phrase = relations[sent_id][phrase_id]
+#             event = dict()
+#             event['action'] = fix_verb(phrase['relation'])
+#             event['actor'] = phrase['actor']        #to be edited
+#             event['obj'] = phrase['obj']          #to be edited
+#             ret_list.append(event)
+#     utils.log('Dividing Events done.')
+#     return ret_list
 
 def dependency_solver(dependencies):
     events = list()
     for sent in dependencies:
-        for governor in dependencies[sent]:
-            if word_info[sent][governor]['pos'][0] == 'V':
+        for governor_index in sorted(dependencies[sent]):
+            if is_verb(sent, governor_index):
                 event = dict()
-                event['action'] = fix_verb(sent, governor)
-                for dep in dependencies[sent][governor]:
+                governor = get_text(sent, governor_index)
+                event['action'] = fix_verb(sent, governor_index)
+                for dep in dependencies[sent][governor_index]:
                     if dep['dependancy'] in subject_tags:
-                        event['actor'] =  dep['dependent'].capitalize()
+                        event['actor'] =  fix_noun(sent, dep['dependent']).capitalize()
                     if dep['dependancy'] in object_tags:
-                        event['obj'] = dep['dependent']
+                        if not 'obj' in event:
+                            event['obj'] = fix_noun(sent, dep['dependent'])
+                        else:
+                            event['obj2'] = fix_noun(sent, dep['dependent'])
                 if 'actor' in event:
                     events.append(event)
     return events
@@ -76,17 +95,16 @@ def nlp(raw_input):
     initialize_lists()
     global word_info
     #Solving Coreferences
-    without_coref = core.solve_coref(raw_input)
+    # corefs = core.solve_coref(raw_input)
     #Tokenizing to get lemmas, POS
-    word_info = core.get_info(without_coref)
+    word_info = core.get_info(raw_input)
     #Extract Relations
     # relations = core.openie(without_coref)
     #Get Dependencies
-    dependencies = core.enhanced_dependencies(without_coref)
+    dependencies = core.enhanced_dependencies(raw_input)
     #Put events in the format: {actor, action, obj}
     return json.dumps({"data":dependency_solver(dependencies)})
     # return json.dumps(format_event(relations))
-
     #Replacing strange nouns/actions
 
 
