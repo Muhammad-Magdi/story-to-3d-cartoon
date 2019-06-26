@@ -115,12 +115,18 @@ def enhanced_dependencies(text):
 #pos => the part of speech
 #text => original text
 #rep ?=> the representative (if it has)
+#is_person ?=> if this is a person entity
 def get_info(text):
     log('Getting Lemmas...')
-    jsonRet = call_core(text, 'lemma')['sentences']
+    jsonRet = call_core(text, 'lemma, ner')['sentences']
     ret_dict = dict()
     corefs = solve_coref(text)
+
+    persons = [];
     for sent in jsonRet:
+        for entity in sent['entitymentions']:
+            if entity['ner'] == 'PERSON':
+                persons.append(entity['text'])
         ret_dict[sent['index']] = dict()
         for token in sent['tokens']:
             ret_dict[sent['index']][token['index']] = dict()
@@ -131,5 +137,7 @@ def get_info(text):
             ret_dict[sent['index']][token['index']]['text'] = token['originalText']
             if token['index'] in corefs:
                 ret_dict[sent['index']][token['index']]['rep'] = corefs[token['index']]
+            if token['originalText'] in persons:
+                ret_dict[sent['index']][token['index']]['is_person'] = True
     log('Lemmatizing done: '+ str(ret_dict))
     return ret_dict
