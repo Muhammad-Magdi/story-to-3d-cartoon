@@ -1,7 +1,7 @@
 import utils.helpers.nltk_helper as nltk
 import utils.helpers.core_helper as core
 import json
-import utils.utils as utils
+#import utils.utils as utils
 import utils.word2vec as w2v
 
 aux_list = list()
