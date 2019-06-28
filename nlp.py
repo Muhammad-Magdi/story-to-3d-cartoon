@@ -43,10 +43,10 @@ def most_similar(verb):
     freq[path_candidate] = TREEWEIGHT if path_candidate not in freq.keys() else freq[path_candidate]+TREEWEIGHT
     # wup_candidate = nltk.most_similar_wup(action_synset_dict, verb)
     # freq[wup_candidate] = TREEWEIGHT if wup_candidate not in freq.keys() else freq[wup_candidate]+TREEWEIGHT
-    w2v_euclidean_candidate = w2v.most_similar_euclidean(action_dict, verb)
-    freq[w2v_euclidean_candidate] = EUCLIDEANWEIGHT if w2v_euclidean_candidate not in freq.keys() else freq[w2v_euclidean_candidate]+EUCLIDEANWEIGHT
-    w2v_cosine_candidate = w2v.most_similar_cosine(action_dict, verb)
-    freq[w2v_cosine_candidate] = COSINEWEIGHT if w2v_cosine_candidate not in freq.keys() else freq[w2v_cosine_candidate]+COSINEWEIGHT
+    # w2v_euclidean_candidate = w2v.most_similar_euclidean(action_dict, verb)
+    # freq[w2v_euclidean_candidate] = EUCLIDEANWEIGHT if w2v_euclidean_candidate not in freq.keys() else freq[w2v_euclidean_candidate]+EUCLIDEANWEIGHT
+    # w2v_cosine_candidate = w2v.most_similar_cosine(action_dict, verb)
+    # freq[w2v_cosine_candidate] = COSINEWEIGHT if w2v_cosine_candidate not in freq.keys() else freq[w2v_cosine_candidate]+COSINEWEIGHT
 
     winner = list(freq.keys())[0]
     max_score = list(freq.values())[0]
