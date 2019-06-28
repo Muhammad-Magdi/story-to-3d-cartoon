@@ -1,3 +1,5 @@
 bottle
 nltk
 requests
+gensim
+numpy
