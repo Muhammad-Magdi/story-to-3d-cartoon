@@ -73,26 +73,6 @@ def most_similar_path(synsets_dict, verb):
     
     return most_similar
 
-#A voting system that chooses the most similar synset to the given verb
-def most_similar(synsets_dict, verb):
-    freq = dict()
-
-    lch_candidate = most_similar_lch(synsets_dict, verb)
-    freq[lch_candidate] = 1
-    path_candidate = most_similar_path(synsets_dict, verb)
-    freq[path_candidate] = 1 if path_candidate not in freq.keys() else freq[path_candidate]+1
-    wup_candidate = most_similar_wup(synsets_dict, verb)
-    freq[wup_candidate] = 1 if wup_candidate not in freq.keys() else freq[wup_candidate]+1
-
-    winner = list(freq.keys())[0]
-    max_score = list(freq.values())[0]
-    for candidate, score in freq.items():
-        if score > max_score:
-            winner = candidate
-
-    log('The most similar to "%s" is "%s" with score = %d'%(verb, winner, max_score))
-    return winner
-
 def get_verb_synset(verb):
     return wn.synsets(verb, pos = wn.VERB)[0]
 

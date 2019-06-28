@@ -104,7 +104,7 @@ def enhanced_dependencies(text):
             dep_dict[sent['index']][dependency['governor']].append({
                                                                         'dependancy': dependency['dep'],
                                                                         'dependent': dependency['dependent']
-                                                                        })
+                                                                    })
     log('Finding Dependencies done: ' + str(dep_dict))
     return dep_dict
 
