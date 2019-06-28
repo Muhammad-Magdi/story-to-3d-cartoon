@@ -2,10 +2,18 @@ import utils.helpers.nltk_helper as nltk
 import utils.helpers.core_helper as core
 import json
 import utils.utils as utils
+import utils.word2vec as w2v
 
 aux_list = list()
 word_info = dict()      #lemma, pos, begin, end, text, rep
 action_synset_dict = dict()    #supported actions
+action_dict = dict()
+
+#CONSTANTS
+TREEWEIGHT = 1
+EUCLIDEANWEIGHT = 2
+COSINEWEIGHT = 3
+#
 
 subject_tags = ['nsubj', 'csubj', 'nsubjpass']
 object_tags = ['nmod', 'amod', 'dobj', 'iobj']
@@ -13,15 +21,42 @@ aux_tags = ['aux', 'auxpass']
 
 def initialize_lists():
     #Auxiliaries List
-    global aux_list
+    # global aux_list
     # aux_file = open('data/aux.json', 'r')
     # aux_list = json.loads(aux_file.read())
-    aux_list = ["do", "have", "be", "may", "must", "shall", "will", "can"]
+    # aux_list = ["do", "have", "be", "may", "must", "shall", "will", "can"]
     #Supported Actions list
     global action_synset_dict
+    global action_dict
     action_file = open('data/actions.json')
-    for action in json.loads(action_file.read()):
+    action_dict = json.loads(action_file.read())
+    for action in action_dict:
         action_synset_dict[action] = nltk.get_verb_synset(action)
+
+#A voting system that chooses the most similar synset to the given verb
+def most_similar(verb):
+    freq = dict()
+
+    lch_candidate = nltk.most_similar_lch(action_synset_dict, verb)
+    freq[lch_candidate] = TREEWEIGHT
+    path_candidate = nltk.most_similar_path(action_synset_dict, verb)
+    freq[path_candidate] = TREEWEIGHT if path_candidate not in freq.keys() else freq[path_candidate]+TREEWEIGHT
+    # wup_candidate = nltk.most_similar_wup(action_synset_dict, verb)
+    # freq[wup_candidate] = TREEWEIGHT if wup_candidate not in freq.keys() else freq[wup_candidate]+TREEWEIGHT
+    w2v_euclidean_candidate = w2v.most_similar_euclidean(action_dict, verb)
+    freq[w2v_euclidean_candidate] = EUCLIDEANWEIGHT if w2v_euclidean_candidate not in freq.keys() else freq[w2v_euclidean_candidate]+EUCLIDEANWEIGHT
+    w2v_cosine_candidate = w2v.most_similar_cosine(action_dict, verb)
+    freq[w2v_cosine_candidate] = COSINEWEIGHT if w2v_cosine_candidate not in freq.keys() else freq[w2v_cosine_candidate]+COSINEWEIGHT
+
+    winner = list(freq.keys())[0]
+    max_score = list(freq.values())[0]
+    for candidate, score in freq.items():
+        if score > max_score:
+            winner = candidate
+            max_score = score
+
+    utils.log('The most similar to "%s" is "%s" with score = %d'%(verb, winner, max_score))
+    return winner
 
 def get_text(sent, index):
     return word_info[sent][index]['text']
@@ -41,6 +76,8 @@ def is_verb(sent, index):
 def is_person(sent, index):
     return 'person' in word_info[sent][index] or 'rep' in word_info[sent][index]
 
+#Removes {a, an, the} from the noun
+#Substitute pronouns with nouns
 def fix_noun(sent, noun_index):
     noun = get_text(sent, noun_index) if 'rep' not in word_info[sent][noun_index] else get_rep(sent, noun_index)
     while 'a ' in noun: noun = noun.replace('a ', '')
@@ -50,7 +87,7 @@ def fix_noun(sent, noun_index):
 
 def fix_verb(sent, verb_index):
     verb = get_lemma(sent, verb_index)
-    verb = nltk.most_similar(action_synset_dict, verb)
+    verb = most_similar(verb)
     return verb
 
 def dependency_solver(dependencies):
