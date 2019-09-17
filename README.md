@@ -1,4 +1,4 @@
-# Graduation-Project
+# Story to 3D-Cartoon
 
 ## Usage:
   ### Install Prerequisites:
